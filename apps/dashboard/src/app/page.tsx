@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import PomodoroTimer from "@/components/PomodoroTimer";
 import EisenhowerMatrix from "@/components/EisenhowerMatrix";
+import TaskHistory from "@/components/TaskHistory";
 import UserStats from "@/components/UserStats";
 import { Settings, ShieldCheck, Activity, AlertTriangle, X } from 'lucide-react';
 
@@ -125,6 +126,10 @@ export default function Home() {
              
              <section className="rounded-sm overflow-hidden">
                <EisenhowerMatrix />
+             </section>
+
+             <section>
+               <TaskHistory />
              </section>
           </main>
 

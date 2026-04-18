@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Circle, CheckCircle2 } from 'lucide-react';
+import { Circle, Trash2 } from 'lucide-react';
 
 const EisenhowerMatrix = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -27,8 +27,19 @@ const EisenhowerMatrix = () => {
       body: JSON.stringify({ ...task, is_completed: true })
     })
     .then(res => res.json())
-    .then(() => fetchTasks()) // Recarrega para ver o XP subindo no perfil
+    .then(() => fetchTasks())
     .catch(err => console.error("Update task error:", err));
+  };
+
+  const deleteTask = (taskId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Evita marcar como concluída ao excluir
+    if (!confirm("Tem certeza que deseja excluir esta tarefa?")) return;
+
+    fetch(`http://localhost:8000/tasks/${taskId}`, {
+      method: 'DELETE',
+    })
+    .then(() => fetchTasks())
+    .catch(err => console.error("Delete task error:", err));
   };
 
   const createTask = (qId: string) => {
@@ -78,11 +89,19 @@ const EisenhowerMatrix = () => {
             {q.tasks.map((task) => (
               <div 
                 key={task.id} 
-                className="group flex items-start space-x-3 text-zinc-300 hover:text-white cursor-pointer transition-colors"
+                className="group flex items-center justify-between text-zinc-300 hover:text-white cursor-pointer transition-colors"
                 onClick={() => completeTask(task)}
               >
-                <Circle size={14} className="mt-0.5 text-zinc-700 group-hover:text-emerald-500 shrink-0 transition-colors" strokeWidth={1.5} />
-                <span className="text-sm font-light tracking-tight">{task.title}</span>
+                <div className="flex items-start space-x-3">
+                  <Circle size={14} className="mt-0.5 text-zinc-700 group-hover:text-emerald-500 shrink-0 transition-colors" strokeWidth={1.5} />
+                  <span className="text-sm font-light tracking-tight">{task.title}</span>
+                </div>
+                <button 
+                  onClick={(e) => deleteTask(task.id, e)}
+                  className="opacity-0 group-hover:opacity-100 p-1 text-zinc-600 hover:text-rose-500 transition-all"
+                >
+                  <Trash2 size={12} strokeWidth={1.5} />
+                </button>
               </div>
             ))}
             
