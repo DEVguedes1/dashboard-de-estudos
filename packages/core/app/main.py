@@ -50,13 +50,12 @@ def update_task(task_id: int, task: schemas.TaskCreate, db: Session = Depends(da
     db.refresh(db_task)
     return db_task
 
-# Endpoints de Perfil (Gamificação)
+# Endpoints de Perfil
 @app.get("/profile", response_model=schemas.UserProfile)
 def get_profile(db: Session = Depends(database.get_db)):
     profile = db.query(models.UserProfile).first()
     if not profile:
-        # Criar um perfil padrão se não existir
-        profile = models.UserProfile(username="Usuário Estudo", level=1, xp=0, streak_days=0)
+        profile = models.UserProfile(username="Usuário Estudo")
         db.add(profile)
         db.commit()
         db.refresh(profile)

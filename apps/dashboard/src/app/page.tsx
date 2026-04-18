@@ -30,14 +30,10 @@ export default function Home() {
         .then(data => {
           if (data) {
             setCurrentActivity(data);
-            
-            // Lógica de detecção de distração
             const procName = data.process_name;
             const winTitle = data.window_title;
-            
             const isBlacklistedProcess = blacklistProcesses.some(p => procName.toLowerCase().includes(p.toLowerCase()));
             const isBlacklistedTitle = blacklistKeywords.some(kw => winTitle.toLowerCase().includes(kw.toLowerCase()));
-            
             setIsDistracted(isBlacklistedProcess || isBlacklistedTitle);
           }
         })
@@ -55,18 +51,15 @@ export default function Home() {
       {/* Notificação de Distração (Banner Fixo) */}
       {isDistracted && (
         <div className="fixed top-0 left-0 w-full z-50 animate-in fade-in slide-in-from-top duration-500">
-          <div className="bg-rose-500 text-white px-6 py-3 flex items-center justify-between shadow-2xl">
+          <div className="bg-rose-500 text-white px-6 py-2 flex items-center justify-between shadow-2xl">
             <div className="flex items-center gap-3">
-              <AlertTriangle size={18} className="animate-pulse" />
-              <p className="text-xs font-bold uppercase tracking-widest">
-                Atenção: Distração Detectada ({currentActivity?.process_name}) • Volte ao seu plano de foco!
+              <AlertTriangle size={14} className="animate-pulse" />
+              <p className="text-[10px] font-bold uppercase tracking-widest">
+                Distração Detectada: {currentActivity?.process_name} • Volte ao foco
               </p>
             </div>
-            <button 
-              onClick={() => setIsDistracted(false)} 
-              className="p-1 hover:bg-white/20 rounded-full transition-colors"
-            >
-              <X size={16} />
+            <button onClick={() => setIsDistracted(false)} className="p-1 hover:bg-white/20 rounded-full transition-colors">
+              <X size={14} />
             </button>
           </div>
         </div>
@@ -81,21 +74,19 @@ export default function Home() {
               Unified Management System
             </h1>
             <div className="flex items-center space-x-3 text-[10px] font-medium text-zinc-500 uppercase tracking-widest">
-              <span className={`flex items-center gap-1.5 transition-colors duration-500 ${isDistracted ? 'text-rose-500' : 'text-zinc-400'}`}>
-                <ShieldCheck size={12} className={isDistracted ? 'text-rose-600' : 'text-zinc-600'} /> 
-                {isDistracted ? "Focus Disrupted" : "Focus Lockdown Active"}
+              <span className={`flex items-center gap-1.5 transition-colors duration-500 ${isDistracted ? 'text-rose-500' : 'text-zinc-500'}`}>
+                <ShieldCheck size={12} className={isDistracted ? 'text-rose-600' : 'text-zinc-700'} /> 
+                {isDistracted ? "Focus Disrupted" : "Focus Active"}
               </span>
               <span className="w-1 h-1 rounded-full bg-zinc-800"></span>
               <span className="flex items-center gap-1.5">
-                <Activity size={12} className="text-zinc-600" /> 
-                {currentActivity 
-                  ? `Atividade: ${currentActivity.process_name}` 
-                  : "Sincronizando: P1-Capture..."}
+                <Activity size={12} className="text-zinc-700" /> 
+                {currentActivity ? `${currentActivity.process_name}` : "Sincronizando..."}
               </span>
             </div>
           </div>
           
-          <button className="text-zinc-600 hover:text-zinc-300 transition-colors">
+          <button className="text-zinc-700 hover:text-zinc-300 transition-colors">
             <Settings size={18} strokeWidth={1.5} />
           </button>
         </header>
@@ -103,7 +94,7 @@ export default function Home() {
         {/* Grid Principal */}
         <div className="grid grid-cols-12 gap-12">
           
-          {/* Coluna Lateral: Perfil e Timer */}
+          {/* Coluna Lateral */}
           <aside className="col-span-12 lg:col-span-3 space-y-12">
             <section>
               <UserStats />
@@ -114,13 +105,12 @@ export default function Home() {
             </section>
 
             <section className="pt-8 border-t border-zinc-900">
-              <h4 className="text-[10px] font-bold text-zinc-600 uppercase mb-4 tracking-widest">Current Status</h4>
               <div className={`border p-4 rounded-lg transition-colors duration-500 ${isDistracted ? 'bg-rose-950/20 border-rose-900/50' : 'bg-zinc-950/40 border-zinc-900'}`}>
-                <p className={`text-[10px] uppercase tracking-widest font-bold mb-2 ${isDistracted ? 'text-rose-500' : 'text-zinc-500'}`}>
-                  Janela Ativa
+                <p className={`text-[9px] uppercase tracking-widest font-bold mb-2 ${isDistracted ? 'text-rose-500' : 'text-zinc-600'}`}>
+                  Janela Atual
                 </p>
-                <p className={`text-[11px] leading-relaxed font-light truncate ${isDistracted ? 'text-rose-200' : 'text-zinc-300'}`}>
-                  {currentActivity ? currentActivity.window_title : "Monitorando janelas..."}
+                <p className={`text-[11px] leading-relaxed font-light truncate ${isDistracted ? 'text-rose-200' : 'text-zinc-400'}`}>
+                  {currentActivity ? currentActivity.window_title : "..."}
                 </p>
               </div>
             </section>
@@ -129,9 +119,8 @@ export default function Home() {
           {/* Coluna Central: Eisenhower Matrix */}
           <main className="col-span-12 lg:col-span-9">
              <div className="mb-6 flex justify-between items-center">
-                <h2 className="text-xs font-semibold text-zinc-300 uppercase tracking-[0.2em]">Prioritization Matrix</h2>
+                <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-[0.2em]">Tasks</h2>
                 <div className="h-[0.5px] flex-1 bg-zinc-900 mx-6"></div>
-                <button className="text-[10px] font-bold text-zinc-600 hover:text-zinc-400 uppercase tracking-widest">Archive</button>
              </div>
              
              <section className="rounded-sm overflow-hidden">

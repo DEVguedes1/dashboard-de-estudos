@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class TaskBase(BaseModel):
@@ -22,9 +22,6 @@ class Task(TaskBase):
 
 class UserProfileBase(BaseModel):
     username: str
-    level: int = 1
-    xp: int = 0
-    streak_days: int = 0
 
 class UserProfile(UserProfileBase):
     id: int

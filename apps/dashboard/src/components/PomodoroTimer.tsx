@@ -49,10 +49,6 @@ const PomodoroTimer = () => {
           <RotateCcw size={14} strokeWidth={1.5} />
         </button>
       </div>
-
-      <div className="mt-12 text-[10px] text-zinc-600 font-medium uppercase tracking-[0.2em]">
-        DAILY GOAL: <span className="text-zinc-400">1/4 SESSIONS</span>
-      </div>
     </div>
   );
 };
