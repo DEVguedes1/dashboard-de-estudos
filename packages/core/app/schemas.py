@@ -32,3 +32,17 @@ class UserProfile(UserProfileBase):
 
     class Config:
         from_attributes = True
+
+class ActivityLogBase(BaseModel):
+    process_name: str
+    window_title: str
+
+class ActivityLogCreate(ActivityLogBase):
+    pass
+
+class ActivityLog(ActivityLogBase):
+    id: int
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True

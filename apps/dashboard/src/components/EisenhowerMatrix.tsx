@@ -1,38 +1,37 @@
 "use client";
-import React from 'react';
-import { Circle, CheckCircle2, MoreHorizontal } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Circle } from 'lucide-react';
 
 const EisenhowerMatrix = () => {
+  const [tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/tasks')
+      .then(res => res.json())
+      .then(data => setTasks(data))
+      .catch(err => console.error("API error:", err));
+  }, []);
+
   const quadrants = [
     {
       id: 'Q1',
       title: 'Do Now',
-      tasks: [
-        { id: 1, text: 'Core API Documentation', urgency: true, importance: true },
-        { id: 2, text: 'DB Persistence Fix', urgency: true, importance: true },
-      ]
+      tasks: tasks.filter(t => t.is_important && t.is_urgent)
     },
     {
       id: 'Q2',
       title: 'Schedule',
-      tasks: [
-        { id: 3, text: 'Gamification Engine Refactor', urgency: false, importance: true },
-        { id: 4, text: 'Phase 3 Planning', urgency: false, importance: true },
-      ]
+      tasks: tasks.filter(t => t.is_important && !t.is_urgent)
     },
     {
       id: 'Q3',
       title: 'Delegate',
-      tasks: [
-        { id: 5, text: 'Reply QA Emails', urgency: true, importance: false },
-      ]
+      tasks: tasks.filter(t => !t.is_important && t.is_urgent)
     },
     {
       id: 'Q4',
       title: 'Eliminate',
-      tasks: [
-        { id: 6, text: 'Tech News Subscription', urgency: false, importance: false },
-      ]
+      tasks: tasks.filter(t => !t.is_important && !t.is_urgent)
     }
   ];
 
@@ -51,12 +50,16 @@ const EisenhowerMatrix = () => {
             {q.tasks.map((task) => (
               <div 
                 key={task.id} 
-                className="group flex items-start space-x-3 text-zinc-300 hover:text-white cursor-pointer transition-colors"
+                className={`group flex items-start space-x-3 hover:text-white cursor-pointer transition-colors ${task.is_completed ? 'text-zinc-600 line-through' : 'text-zinc-300'}`}
               >
                 <Circle size={14} className="mt-0.5 text-zinc-700 group-hover:text-zinc-400 shrink-0" strokeWidth={1.5} />
-                <span className="text-sm font-light tracking-tight">{task.text}</span>
+                <span className="text-sm font-light tracking-tight">{task.title}</span>
               </div>
             ))}
+            
+            {q.tasks.length === 0 && (
+              <p className="text-[10px] italic text-zinc-800 tracking-tight">Sem tarefas pendentes.</p>
+            )}
             
             <button className="text-[10px] font-semibold text-zinc-600 hover:text-zinc-400 tracking-wide uppercase mt-4 block">
               + New Task

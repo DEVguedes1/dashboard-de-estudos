@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from . import models, schemas, database
 
@@ -61,3 +61,16 @@ def get_profile(db: Session = Depends(database.get_db)):
         db.commit()
         db.refresh(profile)
     return profile
+
+# Endpoints de Atividade (Capture integration)
+@app.post("/activity", response_model=schemas.ActivityLog)
+def create_activity_log(activity: schemas.ActivityLogCreate, db: Session = Depends(database.get_db)):
+    db_activity = models.ActivityLog(**activity.model_dump())
+    db.add(db_activity)
+    db.commit()
+    db.refresh(db_activity)
+    return db_activity
+
+@app.get("/activity/current", response_model=Optional[schemas.ActivityLog])
+def get_current_activity(db: Session = Depends(database.get_db)):
+    return db.query(models.ActivityLog).order_by(models.ActivityLog.timestamp.desc()).first()

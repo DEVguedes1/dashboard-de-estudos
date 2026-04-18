@@ -23,3 +23,11 @@ class UserProfile(Base):
     xp = Column(Integer, default=0)
     streak_days = Column(Integer, default=0)
     last_activity = Column(DateTime(timezone=True), server_default=func.now())
+
+class ActivityLog(Base):
+    __tablename__ = "activity_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    process_name = Column(String, index=True)
+    window_title = Column(String)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
